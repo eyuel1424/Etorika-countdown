@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown to Etorika — Teddy Afro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #006400 0%, #006400 33%, #FFCD00 33%, #FFCD00 66%, #EF2118 66%, #EF2118 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .et-star {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px;
+      height: 340px;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .et-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(1.6rem, 6vw, 3rem);
+      font-weight: 900;
+      color: #0a0a0a;
+      text-align: center;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      z-index: 1;
+      position: relative;
+    }
+
+    .et-subtitle {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      font-weight: 700;
+      color: #111;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      z-index: 1;
+      position: relative;
+      letter-spacing: 0.03em;
+    }
+
+    .et-clock {
+      display: flex;
+      gap: clamp(8px, 3vw, 24px);
+      z-index: 1;
+      position: relative;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .et-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .et-num {
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid rgba(0,0,0,0.15);
+      border-radius: 14px;
+      padding: 16px 20px;
+      min-width: clamp(72px, 18vw, 100px);
+      text-align: center;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2rem, 7vw, 3.2rem);
+      font-weight: 700;
+      color: #0a0a0a;
+      letter-spacing: 4px;
+    }
+
+    .et-label {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #0a0a0a;
+    }
+
+    .et-sep {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2rem, 7vw, 3.2rem);
+      font-weight: 900;
+      color: #0a0a0a;
+      align-self: center;
+      margin-top: -22px;
+    }
+
+    .et-released {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      font-weight: 900;
+      color: #0a0a0a;
+      text-align: center;
+      animation: pulse 1.5s ease-in-out infinite;
+      z-index: 1;
+      position: relative;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.04); }
+    }
+
+    .et-footer {
+      margin-top: 2.5rem;
+      z-index: 1;
+      position: relative;
+      text-align: center;
+    }
+
+    .et-footer a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(0,0,0,0.2);
+      border-radius: 30px;
+      padding: 11px 26px;
+      color: #0a0a0a;
+      text-decoration: none;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(0.78rem, 2vw, 0.92rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: background 0.2s;
+    }
+
+    .et-footer a:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .yt-icon {
+      width: 24px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Faint watermark star -->
+  <svg class="et-star" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="100,10 120,70 180,70 130,110 150,170 100,135 50,170 70,110 20,70 80,70" fill="black"/>
+  </svg>
+
+  <h1 class="et-title">Countdown to Etorika</h1>
+  <p class="et-subtitle" id="localtime-note">Loading your local time...</p>
+
+  <div id="clock-area">
+    <div class="et-clock">
+      <div class="et-unit"><div class="et-num" id="h">00</div><div class="et-label">Hours</div></div>
+      <div class="et-sep">:</div>
+      <div class="et-unit"><div class="et-num" id="m">00</div><div class="et-label">Minutes</div></div>
+      <div class="et-sep">:</div>
+      <div class="et-unit"><div class="et-num" id="s">00</div><div class="et-label">Seconds</div></div>
+    </div>
+  </div>
+
+  <div class="et-footer">
+    <a href="https://www.youtube.com/@TeddyAfroOfficial" target="_blank" rel="noopener noreferrer">
+      <svg class="yt-icon" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="16" rx="4" fill="#ff0000"/>
+        <polygon points="9.5,4 17,8 9.5,12" fill="white"/>
+      </svg>
+      Teddy Afro the King
+    </a>
+  </div>
+
+  <script>
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function getTarget() {
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Chicago',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      });
+      const parts = formatter.formatToParts(now);
+      const year = parts.find(p => p.type === 'year').value;
+      const month = parts.find(p => p.type === 'month').value;
+      const day = parts.find(p => p.type === 'day').value;
+
+      const ctNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+      const utcNow = new Date();
+      const offsetMs = utcNow - ctNow;
+
+      const localTarget = new Date(`${year}-${month}-${day}T06:00:00`);
+      const targetUTC = new Date(localTarget.getTime() + offsetMs);
+      return targetUTC;
+    }
+
+    const target = getTarget();
+
+    const localStr = target.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    const localDateStr = target.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    document.getElementById('localtime-note').textContent =
+      'Releasing ' + localDateStr + ' at ' + localStr + ' your local time';
+
+    function tick() {
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById('clock-area').innerHTML =
+          '<div class="et-released">Etorika is out now!</div>';
+        document.getElementById('localtime-note').textContent = "It's here — go listen!";
+        return;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+
+      document.getElementById('h').textContent = pad(h);
+      document.getElementById('m').textContent = pad(m);
+      document.getElementById('s').textContent = pad(s);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
